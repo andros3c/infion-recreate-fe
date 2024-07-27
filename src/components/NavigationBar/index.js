@@ -22,7 +22,7 @@ import { colors } from "@/theme/foundations/colors";
 
 const NavigationBar = () => {
   return (
-    <Flex w="100%" h="9%" bgColor={"white"}>
+    <Flex w="100%" h="4em" bgColor={"white"} position="absolute" zIndex={45}>
       <Flex h="100%%" w="100%" px="135px" alignItems="center">
         <Flex w="100%" h="100%%">
           <Flex w="10%" h="100%" alignItems="center">
