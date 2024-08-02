@@ -19,8 +19,13 @@ import { IoMdNotifications } from "react-icons/io";
 import { MdPerson } from "react-icons/md";
 import Image from "next/image";
 import { colors } from "@/theme/foundations/colors";
+import { getUserInfo } from "@/utils/tokenHelper";
 
 const NavigationBar = () => {
+  const {
+    userInfo: { username },
+  } = getUserInfo();
+
   return (
     <Flex w="100%" h="4em" bgColor={"white"} position="absolute" zIndex={45}>
       <Flex h="100%%" w="100%" px="135px" alignItems="center">
@@ -53,7 +58,7 @@ const NavigationBar = () => {
                 color={colors.myColor.black[200]}
               />
             </Flex>
-            <Flex p=".40em" borderRadius={"8px"}  >
+            <Flex p=".40em" borderRadius={"8px"}>
               <Icon
                 as={BsBookmarkFill}
                 w="20px"
@@ -95,7 +100,7 @@ const NavigationBar = () => {
               </Circle>
 
               <Flex direction="column">
-                <Text fontWeight={"bold"}>Yesaya Alehandro</Text>
+                <Text fontWeight={"bold"}>{username}</Text>
                 <Text fontSize={"smaller"}>see your profile</Text>
               </Flex>
             </Flex>

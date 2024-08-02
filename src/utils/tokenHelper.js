@@ -16,3 +16,12 @@ export const setToken = (token) => {
 export const clearToken = () => {
   localStorage.clear();
 };
+
+export const getUserInfo = () => {
+  try {
+    const token = JSON.parse(localStorage.getItem(TOKEN_KEY));
+    return token;
+  } catch {
+    return {};
+  }
+};
