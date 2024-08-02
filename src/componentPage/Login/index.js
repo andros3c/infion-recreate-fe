@@ -1,6 +1,8 @@
 "use client";
 
 import { LoginRegisterSideContent } from "@/components/LoginRegisterSideContent";
+import { useAuthContext } from "@/contexts/auth";
+import { checkIsValueValid } from "@/utils/validation/checkIsValueValid";
 import {
   Button,
   Flex,
@@ -9,13 +11,41 @@ import {
   InputRightElement,
   Text,
 } from "@chakra-ui/react";
+import { cloneDeep } from "lodash";
 import { useRouter } from "next/navigation";
 
 import { useState } from "react";
 
-const LoginPage = () => {
+const LoginPageContent = () => {
+  const initialLoginField = {
+    identifier: { value: "", error: "" },
+    password: { value: "", error: "" },
+  };
   const [show, setShow] = useState(false);
   const { push } = useRouter();
+  const { handleUserLogin } = useAuthContext();
+  const [loginField, setLoginField] = useState(initialLoginField);
+  const handleClickLogin = () => {
+    const {
+      identifier: { value: identifier },
+      password: { value: password },
+    } = loginField;
+    handleUserLogin({ identifier, password });
+    setLoginField(initialLoginField);
+  };
+  const handleFieldOnChange = (key, value) => {
+    const copyValue = cloneDeep(loginField);
+    copyValue[key].value = value;
+    !checkIsValueValid(value)
+      ? (copyValue[key].error = "must be filled")
+      : (copyValue[key].error = "");
+
+    setLoginField(copyValue);
+  };
+  const isFieldsValid = Object.values(loginField).every(
+    (field) => field.value && field.error === ""
+  );
+
   return (
     <Flex h="100%" w="100%">
       <LoginRegisterSideContent />
@@ -37,13 +67,28 @@ const LoginPage = () => {
             Login
           </Text>
           <Flex direction={"column"}>
-            <Text>Email</Text>
-            <Input type="email" />
+            <Text>Email or Username</Text>
+            <Input
+              type="text"
+              value={loginField.identifier.value}
+              onChange={(e) =>
+                handleFieldOnChange("identifier", e.target.value)
+              }
+            />
+            <Text fontSize="small" color="red">
+              {loginField.identifier.error}
+            </Text>
           </Flex>
           <Flex direction={"column"}>
             <Text>Password</Text>
             <InputGroup>
-              <Input type={show ? "text" : "password"} />
+              <Input
+                type={show ? "text" : "password"}
+                value={loginField.password.value}
+                onChange={(e) =>
+                  handleFieldOnChange("password", e.target.value)
+                }
+              />
               <InputRightElement width="4.5rem">
                 <Button
                   fontSize={"small"}
@@ -57,12 +102,21 @@ const LoginPage = () => {
                 </Button>
               </InputRightElement>
             </InputGroup>
+            <Text fontSize="small" color="red">
+              {loginField.password.error}
+            </Text>
           </Flex>
           <Text as={"a"} fontSize="smaller" color={"green"}>
             Forgot Password?
           </Text>
           <Flex direction={"column"} gap=".8em" mt="2em">
-            <Button colorScheme={"blue"}>Login</Button>
+            <Button
+              colorScheme={"blue"}
+              onClick={() => handleClickLogin()}
+              isDisabled={!isFieldsValid}
+            >
+              Login
+            </Button>
             <Text
               as={"a"}
               href="/"
@@ -83,4 +137,7 @@ const LoginPage = () => {
   );
 };
 
+const LoginPage = () => {
+  return <LoginPageContent />;
+};
 export default LoginPage;
