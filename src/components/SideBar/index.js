@@ -11,12 +11,13 @@ const SideBar = ({ children, position, ...props }) => {
       : { ml: "135px" };
   return (
     <Flex
-      position={"absolute"}
+      position={"relative"}
       w="15%"
       h="100%"
       {...styleProp}
       {...props}
       direction={"column"}
+      alignItems={"center"}
     >
       {children}
     </Flex>
