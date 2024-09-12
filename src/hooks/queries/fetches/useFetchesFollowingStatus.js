@@ -3,7 +3,7 @@ import { useRequest } from "@/contexts/request";
 import { useFetchData } from "@/utils/useDataQuery";
 
 export const useFetchesFollowingStatus = ({ userId, followUserId, config }) => {
-  userId, followUserId;
+  
   const STATION_HOSTNAME = window.location.hostname;
   const { get } = useRequest();
   const getStatus = async () => {
