@@ -7,8 +7,10 @@ import { useEffect, useRef, useState } from "react";
 import { ContentHandler } from "../ContentHandler";
 import { ConvertTimestampFormat } from "@/utils/timeStampConverter";
 import { getUserInfo } from "@/utils/tokenHelper";
-import { ThreadOwner } from "./ThreadOwner";
+
 import { FollowingStatusBadge } from "./FollowingStatusBadge";
+import { InteractionBar } from "./InteractionBar";
+import { ThreadOwner } from "./ThreadOwner";
 
 export const ContentWrapper = () => {
   const {
@@ -71,6 +73,7 @@ export const ContentWrapper = () => {
                 }}
                 isContentOverflowing={overflowStates[idx]}
               />
+              <InteractionBar userId={userId} threadsId={data.id} />
             </Flex>
           );
         })
