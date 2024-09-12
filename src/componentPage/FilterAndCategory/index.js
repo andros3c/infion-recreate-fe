@@ -42,7 +42,7 @@ export const FilterAndCategory = () => {
       <FilterAndCategoryWrapper
         options={filterOptions}
         heading={"Filter by"}
-        mt=".5em"
+        mt="1em"
         isOpen={openIndex === 1}
         onToggle={() => handleToggle(1)}
         theme="secondary"

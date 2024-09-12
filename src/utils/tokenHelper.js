@@ -19,8 +19,8 @@ export const clearToken = () => {
 
 export const getUserInfo = () => {
   try {
-    const token = JSON.parse(localStorage.getItem(TOKEN_KEY));
-    return token;
+    const { token, userInfo } = JSON.parse(localStorage.getItem(TOKEN_KEY));
+    return { token, userInfo };
   } catch {
     return {};
   }

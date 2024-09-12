@@ -1,5 +1,5 @@
 import { useCreateToast } from "@/hooks/useCreateToast";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useMutateData = (mutationFn, config = {}) => {
   const { createErrorToast } = useCreateToast();
@@ -12,4 +12,10 @@ export const useMutateData = (mutationFn, config = {}) => {
     ...config,
   });
   return mutation;
+};
+
+export const useFetchData = (queryKey, queryFn, config = {}) => {
+  const result = useQuery({ queryKey, queryFn, ...config });
+  const { data, ...rest } = result;
+  return { data, ...rest };
 };

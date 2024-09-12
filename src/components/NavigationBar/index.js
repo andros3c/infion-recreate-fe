@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  Circle,
+  
   Flex,
   Icon,
   Input,
@@ -16,10 +16,11 @@ import { RiQuestionnaireFill } from "react-icons/ri";
 import { MdSearch } from "react-icons/md";
 import { BsBookmarkFill } from "react-icons/bs";
 import { IoMdNotifications } from "react-icons/io";
-import { MdPerson } from "react-icons/md";
+
 import Image from "next/image";
 import { colors } from "@/theme/foundations/colors";
 import { getUserInfo } from "@/utils/tokenHelper";
+import { UserProfileIcon } from "@/icons/UserProfileIcon";
 
 const NavigationBar = () => {
   const {
@@ -95,10 +96,7 @@ const NavigationBar = () => {
               </Square>
             </Flex>
             <Flex gap="1em" alignItems={"center"} w="70%">
-              <Circle size="35px" bg={colors.myColor.black[200]} color="white">
-                <Icon as={MdPerson} w="25px" h="25px" />
-              </Circle>
-
+             <UserProfileIcon/>
               <Flex direction="column">
                 <Text fontWeight={"bold"}>{username}</Text>
                 <Text fontSize={"smaller"}>see your profile</Text>
