@@ -2,8 +2,11 @@
 import { useState } from "react";
 import SideBar, { SIDEBAR_POSITION } from "@/components/SideBar";
 import { FilterAndCategoryWrapper } from "./FilterAndCategoryWrapper";
+import { useFetchesCategoriesQuery } from "@/hooks/queries/fetches/useFetchesCategoriesQuery";
 
 export const FilterAndCategory = () => {
+  const { data: categories = [] } = useFetchesCategoriesQuery({});
+
   const filterOptions = [
     "none",
     "oldest",
@@ -13,17 +16,12 @@ export const FilterAndCategory = () => {
     "by comments",
     "by followers",
   ];
-  const categoriesOptions = [
-    "tech & science",
-    "economy",
-    "health",
-    "travel",
-    "gossip",
-    "sports",
-    "healthcare",
-  ];
 
   const [openIndex, setOpenIndex] = useState(0);
+  const _categories = [];
+  categories.length > 0
+    ? categories.map((ele) => _categories.push(ele.category))
+    : "";
 
   const handleToggle = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -32,7 +30,7 @@ export const FilterAndCategory = () => {
   return (
     <SideBar position={SIDEBAR_POSITION.LEFT} w="12%">
       <FilterAndCategoryWrapper
-        options={categoriesOptions}
+        options={_categories}
         heading={"Category"}
         mt="4.5em"
         isOpen={openIndex === 0}
