@@ -5,8 +5,15 @@ import { useCreateToast } from "@/hooks/useCreateToast";
 import { UserProfileIcon } from "@/icons/UserProfileIcon";
 import { colors } from "@/theme/foundations/colors";
 import { ConvertTimestampFormat } from "@/utils/timeStampConverter";
-import { Button, Flex, Text, Textarea } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { ReplyCommentComponent } from "./ReplyCommentSection";
+import { CommentTextAreaComponent } from "./CommentTextArea";
+import Image from "next/image";
+import { useFetchesLikeCommentStatus } from "@/hooks/queries/fetches/useFetchesLikeCommentStatus";
+import { useLikeCommentMutation } from "@/hooks/queries/mutations/useLikeCommentMutation";
+import { useUnlikeCommentMutation } from "@/hooks/queries/mutations/useUnlikeCommentMutation";
 
 export const CommentsSection = ({
   commentsValue,
@@ -15,8 +22,9 @@ export const CommentsSection = ({
   threadsId,
   commentsData,
 }) => {
-  const { createSuccessToast } = useCreateToast();
   const queryClient = useQueryClient();
+  const [replyComment, setReplyComment] = useState({ id: null, status: false });
+  const { createSuccessToast } = useCreateToast();
   const { mutateAsync: handlePostComment } = usePostCommentMutations({
     config: {
       onSuccess: () => {
@@ -26,6 +34,19 @@ export const CommentsSection = ({
       },
     },
   });
+  const handleClickReplyComment = (idx) => {
+    const handleReplyStatus = (prev) => {
+      if (prev.id !== idx && prev.status) {
+        return true;
+      } else {
+        return !prev.status;
+      }
+    };
+    setReplyComment((prev) => ({
+      id: idx,
+      status: handleReplyStatus(prev),
+    }));
+  };
 
   return (
     <Flex direction="column" gap="1.5em">
@@ -63,52 +84,129 @@ export const CommentsSection = ({
                   <Text>{ele.content}</Text>
                 </Flex>
                 <Flex gap="1em">
+                  <LikeComponent
+                    userId={userId}
+                    threadsId={threadsId}
+                    commentId={ele.id}
+                  />
+
                   <Text
                     as={"button"}
                     fontSize={"small"}
                     color={colors.myColor.black[400]}
-                  >
-                    Like
-                  </Text>
-                  <Text
-                    as={"button"}
-                    fontSize={"small"}
-                    color={colors.myColor.black[400]}
+                    onClick={() => handleClickReplyComment(idx)}
                   >
                     Reply
                   </Text>
                 </Flex>
               </Flex>
+              {replyComment.id === idx && replyComment.status ? (
+                <ReplyCommentComponent
+                  userId={userId}
+                  threadsId={threadsId}
+                  parentId={ele.id}
+                />
+              ) : (
+                <></>
+              )}
             </Flex>
           );
         })}
       </Flex>
-      <Flex gap=".5em" alignItems={"center"}>
-        <UserProfileIcon />
-        <Textarea
-          value={commentsValue}
-          onChange={(e) => setCommentsValue(e.target.value)}
-          placeholder="write your comment here"
-          borderRadius={"10px"}
-        />
-      </Flex>
-      <Flex justifyContent={"end"}>
-        <Button
-          size={"sm"}
-          variant={"light"}
-          colorScheme={"yellow"}
-          onClick={() => {
-            handlePostComment({
+      <CommentTextAreaComponent
+        commentsValue={commentsValue}
+        setCommentsValue={setCommentsValue}
+        handlePostComment={handlePostComment}
+        userId={userId}
+        threadsId={threadsId}
+      />
+    </Flex>
+  );
+};
+
+export const LikeComponent = ({ userId, threadsId, commentId, parent_id }) => {
+  const { createSuccessToast } = useCreateToast();
+  const queryClient = useQueryClient();
+  const { data = {} } = useFetchesLikeCommentStatus({
+    user_id: userId,
+    comment_id: commentId,
+    threads_id: threadsId,
+    ...(parent_id !== undefined && { parent_id }),
+  });
+  const isLikeCommentReply = parent_id
+    ? QUERY_KEY_CONSTANTS.GET_COMMENTS_REPLY_LIKE_STATUS
+    : QUERY_KEY_CONSTANTS.GET_COMMENTS_LIKE_STATUS;
+  const { mutateAsync: handleClickLike } = useLikeCommentMutation({
+    config: {
+      onSuccess: () => {
+        createSuccessToast("liked");
+        queryClient.refetchQueries([isLikeCommentReply]);
+      },
+    },
+  });
+  const { mutateAsync: handleClickUnlike } = useUnlikeCommentMutation({
+    config: {
+      onSuccess: () => {
+        createSuccessToast("unliked");
+        queryClient.refetchQueries([isLikeCommentReply]);
+      },
+    },
+  });
+  return (
+    <Flex>
+      {data?.status ? (
+        <Flex
+          gap=".25em"
+          as={"button"}
+          alignItems={"center"}
+          onClick={() =>
+            handleClickUnlike({
               user_id: userId,
               threads_id: threadsId,
-              comment: commentsValue,
-            });
-          }}
-          isDisabled={commentsValue === ""}
+              comment_id: commentId,
+              parent_id,
+            })
+          }
         >
-          Post Comment
-        </Button>
-      </Flex>
+          <Image
+            src={"/like-clicked.svg"}
+            width={15}
+            height={15}
+            alt="like-logo"
+          />
+          <Text
+            as={"button"}
+            fontSize={"small"}
+            color={colors.myColor.black[700]}
+          >
+            Liked
+          </Text>
+        </Flex>
+      ) : (
+        <Flex
+          gap=".25em"
+          alignItems={"center"}
+          as={"button"}
+          onClick={() =>
+            handleClickLike({
+              user_id: userId,
+              threads_id: threadsId,
+              comment_id: commentId,
+              parent_id,
+            })
+          }
+        >
+          <Image
+            src={"/like-not-clicked.svg"}
+            width={15}
+            height={15}
+            alt="like-logo"
+          />{" "}
+          <Text fontSize={"small"} color={colors.myColor.black[700]}>
+            Like
+          </Text>
+        </Flex>
+      )}
     </Flex>
   );
 };

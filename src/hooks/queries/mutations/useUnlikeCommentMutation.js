@@ -1,19 +1,25 @@
 import { useRequest } from "@/contexts/request";
 import { useMutateData } from "@/utils/useDataQuery";
 
-export const usePostCommentMutations = ({ config }) => {
-  const { post } = useRequest();
-  const postComment = async ({ user_id, threads_id, comment }) => {
+export const useUnlikeCommentMutation = ({ config }) => {
+  const { put } = useRequest();
+  const unlikeComment = async ({
+    user_id,
+    threads_id,
+    comment_id,
+    parent_id,
+  }) => {
     const STATION_HOSTNAME = window.location.hostname;
-
+    config;
     try {
-      const response = await post(
-        `http://${STATION_HOSTNAME}:8000/threads/comments/add`,
+      const response = await put(
+        `http://${STATION_HOSTNAME}:8000/threads/comments/unlike/`,
         {
-          json: {
+          searchParams: {
             user_id,
             threads_id,
-            comment,
+            comment_id,
+            ...(parent_id !== undefined && { parent_id }),
           },
         }
       );
@@ -29,7 +35,7 @@ export const usePostCommentMutations = ({ config }) => {
       throw error;
     }
   };
-  return useMutateData(postComment, {
+  return useMutateData(unlikeComment, {
     ...config,
   });
 };
