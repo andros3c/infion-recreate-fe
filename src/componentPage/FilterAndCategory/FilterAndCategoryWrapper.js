@@ -23,7 +23,6 @@ export const FilterAndCategoryWrapper = ({
   ...props
 }) => {
   const [selectedFilter, setSelectedFilter] = useState("");
-
   const isSelected = (id) => id === selectedFilter;
   const isPrimaryTheme = theme === "primary";
   return (
@@ -38,7 +37,7 @@ export const FilterAndCategoryWrapper = ({
       py=".5em"
       overflow={"hidden"}
     >
-      <AccordionItem border={"none"} >
+      <AccordionItem border={"none"}>
         <Text fontWeight="bold">
           <AccordionButton onClick={onToggle}>
             {heading}
@@ -46,56 +45,58 @@ export const FilterAndCategoryWrapper = ({
           </AccordionButton>
         </Text>
         <Flex w="100%">
-          <AccordionPanel
-            overflowY={"auto"}
-            sx={{
-              "::-webkit-scrollbar": {
-                display: "none",
-              },
-              "-ms-overflow-style": "none", // IE and Edge
-              "scrollbar-width": "none", // Firefox
-            }}
-            maxH={"80%"}
-          >
-            <List>
-              {options.map((ele, idx) => {
-                const bgColor = isSelected(idx)
-                  ? isPrimaryTheme
-                    ? "primary"
-                    : "secondary"
-                  : "none";
-                const color = isSelected(idx)
-                  ? isPrimaryTheme
-                    ? "white"
-                    : "none"
-                  : "none";
-                return (
-                  <ListItem
-                    as={Flex}
-                    key={idx}
-                    gap=".20em"
-                    alignItems={"center"}
-                  >
-                    <ListIcon
-                      as={FaCircle}
-                      color={isPrimaryTheme ? "secondary" : "primary"}
-                    />
-                    <Flex
-                      w="100%"
-                      h="100%"
-                      p=".6em"
-                      bgColor={bgColor}
-                      color={color}
-                      fontWeight={isSelected(idx) ? "bold" : "regular"}
-                      onClick={() => setSelectedFilter(idx)}
+          <Flex>
+            <AccordionPanel
+              overflowY={"auto"}
+              h="12em"
+              sx={{
+                "::-webkit-scrollbar": {
+                  display: "none",
+                },
+                "-ms-overflow-style": "none", // IE and Edge
+                "scrollbar-width": "none", // Firefox
+              }}
+            >
+              <List>
+                {options.map((ele, idx) => {
+                  const bgColor = isSelected(idx)
+                    ? isPrimaryTheme
+                      ? "primary"
+                      : "secondary"
+                    : "none";
+                  const color = isSelected(idx)
+                    ? isPrimaryTheme
+                      ? "white"
+                      : "none"
+                    : "none";
+                  return (
+                    <ListItem
+                      as={Flex}
+                      key={idx}
+                      gap=".20em"
+                      alignItems={"center"}
                     >
-                      {ele}
-                    </Flex>
-                  </ListItem>
-                );
-              })}
-            </List>
-          </AccordionPanel>
+                      <ListIcon
+                        as={FaCircle}
+                        color={isPrimaryTheme ? "secondary" : "primary"}
+                      />
+                      <Flex
+                        w="100%"
+                        h="100%"
+                        p=".6em"
+                        bgColor={bgColor}
+                        color={color}
+                        fontWeight={isSelected(idx) ? "bold" : "regular"}
+                        onClick={() => setSelectedFilter(idx)}
+                      >
+                        {ele}
+                      </Flex>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </AccordionPanel>
+          </Flex>
         </Flex>
       </AccordionItem>
     </Accordion>
