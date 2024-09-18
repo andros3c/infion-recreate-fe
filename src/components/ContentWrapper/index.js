@@ -64,7 +64,7 @@ export const ContentWrapper = () => {
                   <Text>{ConvertTimestampFormat(data.created_at)}</Text>
                 </Flex>
               </Flex>
-              <Tag w="max-content">{data.category}</Tag>
+              <Tag w="max-content" bgColor={"secondary"} color={"black"}>{data.category}</Tag>
 
               <ContentHandler
                 content={data.content}
