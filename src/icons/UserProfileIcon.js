@@ -6,9 +6,7 @@ import Image from "next/image";
 import { MdPerson } from "react-icons/md";
 
 export const UserProfileIcon = () => {
-  const {
-    userInfo: { url_img },
-  } = getUserInfo();
+  const { userInfo: { url_img = "" } = {} } = getUserInfo() || {};
   return (
     <Circle size="35px" bg={colors.myColor.black[200]} color="white">
       {url_img ? (

@@ -1,14 +1,18 @@
 "use client";
 
 import {
-  
   Flex,
   Icon,
   Input,
   InputGroup,
   InputLeftElement,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Square,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { MdHome } from "react-icons/md";
 import { MdExplore } from "react-icons/md";
@@ -19,16 +23,31 @@ import { IoMdNotifications } from "react-icons/io";
 
 import Image from "next/image";
 import { colors } from "@/theme/foundations/colors";
-import { getUserInfo } from "@/utils/tokenHelper";
+import { clearToken } from "@/utils/tokenHelper";
 import { UserProfileIcon } from "@/icons/UserProfileIcon";
 
-const NavigationBar = () => {
-  const {
-    userInfo: { username },
-  } = getUserInfo();
+import { ModalComponent } from "../Modal";
+import { useRouter } from "next/navigation";
+import { useGetUserInformation } from "@/hooks/useGetUserInformation";
 
+const NavigationBar = () => {
+  const { userInfo: { username = "" } = {} } = useGetUserInformation() || {};
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { push } = useRouter();
   return (
     <Flex w="100%" h="4em" bgColor={"white"} position="absolute" zIndex={45}>
+      <ModalComponent
+        title={"Logout Confirmation"}
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        description={"are you sure to logout?"}
+        proceed={() => {
+          clearToken();
+          push("/");
+        }}
+      />
       <Flex h="100%%" w="100%" px="135px" alignItems="center">
         <Flex w="100%" h="100%%">
           <Flex w="10%" h="100%" alignItems="center">
@@ -96,11 +115,20 @@ const NavigationBar = () => {
               </Square>
             </Flex>
             <Flex gap="1em" alignItems={"center"} w="70%">
-             <UserProfileIcon/>
-              <Flex direction="column">
-                <Text fontWeight={"bold"}>{username}</Text>
-                <Text fontSize={"smaller"}>see your profile</Text>
-              </Flex>
+              <UserProfileIcon />
+
+              <Menu isLazy>
+                <MenuButton>
+                  <Flex direction="column">
+                    <Text fontWeight={"bold"}>{username}</Text>
+                    <Text fontSize={"smaller"}>see your profile</Text>
+                  </Flex>
+                </MenuButton>
+                <MenuList>
+                  <MenuItem>details</MenuItem>
+                  <MenuItem onClick={() => onOpen()}>logout</MenuItem>
+                </MenuList>
+              </Menu>
             </Flex>
           </Flex>
         </Flex>

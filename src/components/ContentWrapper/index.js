@@ -6,17 +6,16 @@ import { Flex, Tag, Text } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { ContentHandler } from "../ContentHandler";
 import { ConvertTimestampFormat } from "@/utils/timeStampConverter";
-import { getUserInfo } from "@/utils/tokenHelper";
 
 import { FollowingStatusBadge } from "./FollowingStatusBadge";
 import { InteractionBar } from "./InteractionBar";
 import { ThreadOwner } from "./ThreadOwner";
 import { useThreadFilter } from "@/hooks/useThreadFilter";
+import { useGetUserInformation } from "@/hooks/useGetUserInformation";
+
 
 export const ContentWrapper = () => {
-  const {
-    userInfo: { id: userId },
-  } = getUserInfo();
+  const { userInfo: { id: userId = "" } = {} } = useGetUserInformation() || {};
 
   const [listThread, setListThread] = useState([]);
   const { filter, getParams: paramParser } = useThreadFilter();
