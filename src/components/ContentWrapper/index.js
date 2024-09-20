@@ -10,13 +10,16 @@ import { ConvertTimestampFormat } from "@/utils/timeStampConverter";
 import { FollowingStatusBadge } from "./FollowingStatusBadge";
 import { InteractionBar } from "./InteractionBar";
 import { ThreadOwner } from "./ThreadOwner";
+import { useThreadFilter } from "@/hooks/useThreadFilter";
 import { useGetUserInformation } from "@/hooks/useGetUserInformation";
+
 
 export const ContentWrapper = () => {
   const { userInfo: { id: userId = "" } = {} } = useGetUserInformation() || {};
 
   const [listThread, setListThread] = useState([]);
-  const { data = [] } = useFetchThreadQuery({ userId });
+  const { filter, getParams: paramParser } = useThreadFilter();
+  const { data = [] } = useFetchThreadQuery({ userId, filter, paramParser });
   const contentRefs = useRef([]); // Initialize as an array
   const [overflowStates, setOverflowStates] = useState([]);
 
