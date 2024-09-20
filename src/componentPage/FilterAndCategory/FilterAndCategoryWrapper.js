@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Accordion,
   AccordionButton,
@@ -11,6 +12,8 @@ import {
   ListItem,
   Text,
 } from "@chakra-ui/react";
+
+
 import { useState } from "react";
 import { FaCircle } from "react-icons/fa";
 
@@ -20,6 +23,8 @@ export const FilterAndCategoryWrapper = ({
   isOpen,
   onToggle,
   theme,
+  onChange,
+  filterName,
   ...props
 }) => {
   const [selectedFilter, setSelectedFilter] = useState("");
@@ -87,7 +92,10 @@ export const FilterAndCategoryWrapper = ({
                         bgColor={bgColor}
                         color={color}
                         fontWeight={isSelected(idx) ? "bold" : "regular"}
-                        onClick={() => setSelectedFilter(idx)}
+                        onClick={() => {
+                          setSelectedFilter(idx);
+                          onChange({ key: filterName, value: ele });
+                        }}
                       >
                         {ele}
                       </Flex>

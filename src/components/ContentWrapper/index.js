@@ -11,6 +11,7 @@ import { getUserInfo } from "@/utils/tokenHelper";
 import { FollowingStatusBadge } from "./FollowingStatusBadge";
 import { InteractionBar } from "./InteractionBar";
 import { ThreadOwner } from "./ThreadOwner";
+import { useThreadFilter } from "@/hooks/useThreadFilter";
 
 export const ContentWrapper = () => {
   const {
@@ -18,7 +19,8 @@ export const ContentWrapper = () => {
   } = getUserInfo();
 
   const [listThread, setListThread] = useState([]);
-  const { data = [] } = useFetchThreadQuery({ userId });
+  const { filter, getParams: paramParser } = useThreadFilter();
+  const { data = [] } = useFetchThreadQuery({ userId, filter, paramParser });
   const contentRefs = useRef([]); // Initialize as an array
   const [overflowStates, setOverflowStates] = useState([]);
 
@@ -64,7 +66,9 @@ export const ContentWrapper = () => {
                   <Text>{ConvertTimestampFormat(data.created_at)}</Text>
                 </Flex>
               </Flex>
-              <Tag w="max-content" bgColor={"secondary"} color={"black"}>{data.category}</Tag>
+              <Tag w="max-content" bgColor={"secondary"} color={"black"}>
+                {data.category}
+              </Tag>
 
               <ContentHandler
                 content={data.content}
