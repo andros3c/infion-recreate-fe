@@ -4,7 +4,6 @@ import { Button, Flex, Select, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import "./text-editor.css";
-import { getUserInfo } from "@/utils/tokenHelper";
 import { useCreateThreadMutation } from "@/hooks/queries/mutations/useCreateThreadMutation";
 import { useCreateToast } from "@/hooks/useCreateToast";
 import { QuillEditor } from "./quill";
@@ -13,6 +12,7 @@ import { isEmpty } from "lodash";
 
 import { QUERY_KEY_CONSTANTS } from "@/constants/queryKey";
 import { useQueryClient } from "@tanstack/react-query";
+import { useGetUserInformation } from "@/hooks/useGetUserInformation";
 
 export const TextEditor = () => {
   const queryClient = useQueryClient();
@@ -21,9 +21,8 @@ export const TextEditor = () => {
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [imageUrls, setImageUrls] = useState([]);
   const { createSuccessToast } = useCreateToast();
-  const {
-    userInfo: { id: user_id, username },
-  } = getUserInfo();
+  const { userInfo: { id: user_id = "", username = "" } = {} } =
+    useGetUserInformation() || {};
   const { mutateAsync: _handlePostThread } = useCreateThreadMutation({
     config: {
       onSuccess: async () => {

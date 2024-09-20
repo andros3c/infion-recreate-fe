@@ -6,16 +6,14 @@ import { Flex, Tag, Text } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { ContentHandler } from "../ContentHandler";
 import { ConvertTimestampFormat } from "@/utils/timeStampConverter";
-import { getUserInfo } from "@/utils/tokenHelper";
 
 import { FollowingStatusBadge } from "./FollowingStatusBadge";
 import { InteractionBar } from "./InteractionBar";
 import { ThreadOwner } from "./ThreadOwner";
+import { useGetUserInformation } from "@/hooks/useGetUserInformation";
 
 export const ContentWrapper = () => {
-  const {
-    userInfo: { id: userId },
-  } = getUserInfo();
+  const { userInfo: { id: userId = "" } = {} } = useGetUserInformation() || {};
 
   const [listThread, setListThread] = useState([]);
   const { data = [] } = useFetchThreadQuery({ userId });
@@ -64,7 +62,9 @@ export const ContentWrapper = () => {
                   <Text>{ConvertTimestampFormat(data.created_at)}</Text>
                 </Flex>
               </Flex>
-              <Tag w="max-content" bgColor={"secondary"} color={"black"}>{data.category}</Tag>
+              <Tag w="max-content" bgColor={"secondary"} color={"black"}>
+                {data.category}
+              </Tag>
 
               <ContentHandler
                 content={data.content}
