@@ -1,23 +1,25 @@
-import { useRequest } from "@/contexts/request";
-import { useMutateData } from "@/utils/useDataQuery";
+import { useRequest } from "../../../contexts/request";
+import { useMutateData } from "../../../utils/useDataQuery";
 
-export const useUserLoginMutation = ({ config }) => {
+export const usePostReplyCommentMutations = ({ config }) => {
   const { post } = useRequest();
-
-  const loginUser = async ({ identifier, password }) => {
+  const postCommentReply = async ({
+    user_id,
+    threads_id,
+    comment,
+    parent_id,
+  }) => {
     const STATION_HOSTNAME = window.location.hostname;
-    const validator = (identifier) =>
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(identifier)
-        ? { email: identifier }
-        : { username: identifier };
-    const data = validator(identifier);
+
     try {
       const response = await post(
-        `http://${STATION_HOSTNAME}:8000/user/login`,
+        `http://${STATION_HOSTNAME}:8000/threads/commentsReply/`,
         {
           json: {
-            ...data,
-            password,
+            user_id,
+            parent_id,
+            threads_id,
+            comment,
           },
         }
       );
@@ -33,7 +35,7 @@ export const useUserLoginMutation = ({ config }) => {
       throw error;
     }
   };
-  return useMutateData(loginUser, {
+  return useMutateData(postCommentReply, {
     ...config,
   });
 };

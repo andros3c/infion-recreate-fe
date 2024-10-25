@@ -1,8 +1,5 @@
 "use client";
 
-import { LoginRegisterSideContent } from "@/components/LoginRegisterSideContent";
-import { useAuthContext } from "@/contexts/auth";
-import { checkIsValueValid } from "@/utils/validation/checkIsValueValid";
 import {
   Button,
   Flex,
@@ -15,6 +12,9 @@ import { cloneDeep } from "lodash";
 import { useRouter } from "next/navigation";
 
 import { useState } from "react";
+import { LoginRegisterSideContent } from "../../components/LoginRegisterSideContent";
+import { useAuthContext } from "../../contexts/auth";
+import { checkIsValueValid } from "../../utils/validation/checkIsValueValid";
 
 const LoginPageContent = () => {
   const initialLoginField = {

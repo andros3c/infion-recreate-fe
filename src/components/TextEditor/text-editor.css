@@ -1,0 +1,12 @@
+/* styles.css */
+.no-border .ql-container,
+.no-border .ql-editor {
+  border-bottom-left-radius: 10px !important;
+  border-bottom-right-radius: 10px !important;
+}
+
+.no-border .ql-toolbar {
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
+ 
+}

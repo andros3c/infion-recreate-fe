@@ -1,10 +1,5 @@
 "use client";
 
-import { LoginRegisterSideContent } from "@/components/LoginRegisterSideContent";
-import { useUserRegisterMutation } from "@/hooks/queries/mutations/useUserRegisterMutation";
-import { useCreateToast } from "@/hooks/useCreateToast";
-import { checkIsValueValid } from "@/utils/validation/checkIsValueValid";
-import { passwordValidation } from "@/utils/validation/passwordValidation";
 import {
   Button,
   Flex,
@@ -17,6 +12,11 @@ import { cloneDeep } from "lodash";
 import { useRouter } from "next/navigation";
 
 import { useState } from "react";
+import { checkIsValueValid } from "../../utils/validation/checkIsValueValid";
+import { passwordValidation } from "../../utils/validation/passwordValidation";
+import { useUserRegisterMutation } from "../../hooks/queries/mutations/useUserRegisterMutation";
+import { useCreateToast } from "../../hooks/useCreateToast";
+import { LoginRegisterSideContent } from "../../components/LoginRegisterSideContent";
 
 const RegisterPage = () => {
   const [show, setShow] = useState({

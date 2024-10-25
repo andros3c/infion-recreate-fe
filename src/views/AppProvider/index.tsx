@@ -1,10 +1,10 @@
 "use client";
 
-import { AuthContextProvider } from "@/contexts/auth";
-import { RequestContextProvider } from "@/contexts/request";
-import theme from "@/theme";
 import { ChakraProvider } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { RequestContextProvider } from "../../contexts/request";
+import { AuthContextProvider } from "../../contexts/auth";
+import theme from "../../theme";
 
 export const AppProvider = ({ children }) => {
   const queryClient = new QueryClient();

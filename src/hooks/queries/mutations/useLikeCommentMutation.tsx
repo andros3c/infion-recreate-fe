@@ -1,20 +1,25 @@
-import { useRequest } from "@/contexts/request";
-import { useMutateData } from "@/utils/useDataQuery";
+import { useRequest } from "../../../contexts/request";
+import { useMutateData } from "../../../utils/useDataQuery";
 
-export const useUserRegisterMutation = ({ config }) => {
+export const useLikeCommentMutation = ({ config }) => {
   const { post } = useRequest();
-
-  const registerUser = async ({ username, email, password }) => {
+  const likeComment = async ({
+    user_id,
+    threads_id,
+    comment_id,
+    parent_id,
+  }) => {
     const STATION_HOSTNAME = window.location.hostname;
-
+    config;
     try {
       const response = await post(
-        `http://${STATION_HOSTNAME}:8000/user/register`,
+        `http://${STATION_HOSTNAME}:8000/threads/comments/like`,
         {
           json: {
-            username,
-            email,
-            password,
+            user_id,
+            threads_id,
+            comment_id,
+            ...(parent_id !== undefined && { parent_id }),
           },
         }
       );
@@ -30,7 +35,7 @@ export const useUserRegisterMutation = ({ config }) => {
       throw error;
     }
   };
-  return useMutateData(registerUser, {
+  return useMutateData(likeComment, {
     ...config,
   });
 };
